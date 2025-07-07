@@ -3,247 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClasseSchool</title>
+  <title>MathÉro – ClasseSchool</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f3f6fb;
-    }
-    header {
-      background-color: #2a7de1;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      background-color: #1c5cbf;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      padding: 1rem;
-      display: inline-block;
-    }
-    nav a:hover {
-      background-color: #1749a0;
-    }
-    main {
-      padding: 2rem;
-    }
-    .tool {
-      background: white;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #2a7de1;
-    }
-    footer {
-      background-color: #2a7de1;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      position: relative;
-    }
-    input, button, select {
-      font-size: 1rem;
-      padding: 0.5rem;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .choice {
-      display: inline-block;
-      background: #e1eaff;
-      padding: 0.5rem 1rem;
-      margin: 0.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .choice:hover {
-      background-color: #c4d9ff;
-    }
+    .mission { margin: 1rem 0; padding: 1rem; background: #eef; border-radius: 8px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <header>
-    <h1>ClasseSchool</h1>
-    <p>Le site d'apprentissage ludique et autonome pour les élèves de CM1-CM2</p>
+    <h1>MathÉro</h1>
+    <p>Réussis les missions de mathématiques pour débloquer les ceintures !</p>
   </header>
-  <nav>
-    <a href="#calculatrice">Calculatrice</a>
-    <a href="#conjugueur">Conjugueur</a>
-    <a href="#quiz">Quiz</a>
-    <a href="#mathtirs">MathTirs</a>
-    <a href="#motalien">MotAlien</a>
-  </nav>
   <main>
-    <section class="tool" id="calculatrice">
-      <h2>Calculatrice</h2>
-      <input type="number" id="num1" placeholder="Nombre 1"> <br>
-      <input type="number" id="num2" placeholder="Nombre 2"> <br>
-      <select id="operation">
-        <option value="+">+</option>
-        <option value="-">-</option>
-        <option value="*">×</option>
-        <option value="/">÷</option>
-      </select><br>
-      <button onclick="calculer()">Calculer</button>
-      <p>Résultat : <span id="resultat">?</span></p>
+    <section id="connexion">
+      <h2>Connexion élève</h2>
+      <input type="text" id="codeEleve" placeholder="Code élève">
+      <button onclick="connecterEleve()">Connexion</button>
+      <p id="loginErreur" style="color:red;"></p>
     </section>
 
-    <section class="tool" id="conjugueur">
-      <h2>Mini-Conjugueur</h2>
-      <input type="text" id="verbe" placeholder="Verbe (1er groupe)"> <br>
-      <select id="temps">
-        <option value="present">Présent</option>
-        <option value="imparfait">Imparfait</option>
-      </select><br>
-      <button onclick="conjuguer()">Conjuguer</button>
-      <div id="conjugaison"></div>
+    <section id="missions" class="hidden">
+      <h2>Missions de mathématiques – Ceinture <span id="ceinture"></span></h2>
+      <div id="zoneMission"></div>
+      <button onclick="verifierMission()">Valider</button>
+      <p id="resultat"></p>
     </section>
-
-    <section class="tool" id="quiz">
-      <h2>Mini-Quiz (maths)</h2>
-      <p id="question"></p>
-      <input type="number" id="reponse" placeholder="Votre réponse">
-      <button onclick="verifierReponse()">Vérifier</button>
-      <p id="feedback"></p>
-    </section>
-
-    <section class="tool" id="mathtirs">
-      <h2>🎯 MathTirs – Calcul mental</h2>
-      <p id="mathTirsQ"></p>
-      <div id="mathTirsOptions"></div>
-      <p>Score : <span id="mathTirsScore">0</span> | Niveau : <span id="mathTirsNiveau">1</span></p>
-    </section>
-
-    <section class="tool" id="motalien">
-      <h2>👾 MotAlien – Orthographe</h2>
-      <p id="motalienQ"></p>
-      <div id="motalienChoices"></div>
-      <p>Score : <span id="motalienScore">0</span> | Niveau : <span id="motalienNiveau">1</span></p>
-    </section>
-
   </main>
+
   <footer>
-    <p>© 2025 ClasseSchool – conçu pour l'apprentissage en toute autonomie</p>
+    <p>© 2025 ClasseSchool – MathÉro</p>
   </footer>
 
   <script>
-    function calculer() {
-      const n1 = parseFloat(document.getElementById('num1').value);
-      const n2 = parseFloat(document.getElementById('num2').value);
-      const op = document.getElementById('operation').value;
-      let res = '?';
-      if (!isNaN(n1) && !isNaN(n2)) {
-        switch(op) {
-          case '+': res = n1 + n2; break;
-          case '-': res = n1 - n2; break;
-          case '*': res = n1 * n2; break;
-          case '/': res = n2 !== 0 ? n1 / n2 : 'Erreur'; break;
-        }
+    let eleves = {};
+    let eleveActuel = null;
+    let missions = {
+      blanche: { question: () => [`2 + 2 = ?`, 4] },
+      jaune:   { question: () => [`5 × 3 = ?`, 15] },
+      orange:  { question: () => [`72 ÷ 8 = ?`, 9] },
+      verte:   { question: () => [`100 - 47 = ?`, 53] },
+    };
+
+    let progression = ["blanche", "jaune", "orange", "verte"];
+
+    async function chargerDonnees() {
+      try {
+        const res = await fetch('https://api.github.com/repos/<TON-NOM-UTILISATEUR>/classeschool-data/contents/eleves.json', {
+          headers: { 'Accept': 'application/vnd.github.v3.raw' }
+        });
+        eleves = await res.json();
+      } catch (e) {
+        console.error("Erreur chargement données :", e);
       }
-      document.getElementById('resultat').textContent = res;
     }
 
-    function conjuguer() {
-      const verbe = document.getElementById('verbe').value.trim().toLowerCase();
-      const temps = document.getElementById('temps').value;
-      let terminaisons = [];
-      if (!verbe.endsWith('er')) {
-        document.getElementById('conjugaison').textContent = "Seuls les verbes du 1er groupe sont acceptés.";
-        return;
+    async function connecterEleve() {
+      const code = document.getElementById("codeEleve").value;
+      if (eleves[code]) {
+        eleveActuel = eleves[code];
+        document.getElementById("connexion").classList.add("hidden");
+        document.getElementById("missions").classList.remove("hidden");
+        lancerMission();
+      } else {
+        document.getElementById("loginErreur").textContent = "Code élève inconnu.";
       }
-      let racine = verbe.slice(0, -2);
-      if (temps === 'present') {
-        terminaisons = ['e', 'es', 'e', 'ons', 'ez', 'ent'];
-      } else if (temps === 'imparfait') {
-        terminaisons = ['ais', 'ais', 'ait', 'ions', 'iez', 'aient'];
-        racine = racine + 'i';
+    }
+
+    let bonneReponse = null;
+
+    function lancerMission() {
+      const niveau = progression[eleveActuel.niveau || 0];
+      document.getElementById("ceinture").textContent = niveau;
+      const [q, r] = missions[niveau].question();
+      bonneReponse = r;
+      document.getElementById("zoneMission").innerHTML = `<p>${q}</p><input type='number' id='reponseMission'>`;
+    }
+
+    async function verifierMission() {
+      const r = parseInt(document.getElementById("reponseMission").value);
+      if (r === bonneReponse) {
+        document.getElementById("resultat").textContent = "✅ Bravo ! Mission réussie !";
+        eleveActuel.niveau = Math.min((eleveActuel.niveau || 0) + 1, progression.length - 1);
+        await sauvegarderEleve();
+        lancerMission();
+      } else {
+        document.getElementById("resultat").textContent = "❌ Réessaie.";
       }
-      const sujets = ['je', 'tu', 'il/elle', 'nous', 'vous', 'ils/elles'];
-      const lignes = sujets.map((s, i) => `${s} ${racine}${terminaisons[i]}`);
-      document.getElementById('conjugaison').innerHTML = lignes.join('<br>');
     }
 
-    // Mini quiz
-    let a = 0, b = 0;
-    function nouvelleQuestion() {
-      a = Math.floor(Math.random() * 10) + 1;
-      b = Math.floor(Math.random() * 10) + 1;
-      document.getElementById('question').textContent = `Combien font ${a} × ${b} ?`;
-      document.getElementById('feedback').textContent = '';
-      document.getElementById('reponse').value = '';
-    }
-    function verifierReponse() {
-      const reponse = parseInt(document.getElementById('reponse').value);
-      const correct = a * b;
-      document.getElementById('feedback').textContent = (reponse === correct) ? "Bravo !" : `Non, c'était ${correct}`;
-      nouvelleQuestion();
+    async function sauvegarderEleve() {
+      // Cette fonction nécessite un backend sécurisé ou une action GitHub avec PAT
+      console.warn("La sauvegarde via API GitHub nécessite une action serveur protégée");
     }
 
-    // MathTirs
-    let mathScore = 0, mathLevel = 1;
-    function loadMathTirs() {
-      let max = 5 + mathLevel * 3;
-      let x = Math.floor(Math.random() * max);
-      let y = Math.floor(Math.random() * max);
-      let op = ['+', '-', '*'][Math.floor(Math.random() * Math.min(1 + mathLevel, 3))];
-      let res = eval(`${x}${op}${y}`);
-      document.getElementById('mathTirsQ').textContent = `${x} ${op} ${y} = ?`;
-      let options = [res];
-      while (options.length < 4) {
-        let faux = res + Math.floor(Math.random() * 10 - 5);
-        if (!options.includes(faux)) options.push(faux);
-      }
-      options.sort(() => Math.random() - 0.5);
-      document.getElementById('mathTirsOptions').innerHTML = options.map(o => `<span class='choice' onclick='checkMathTirs(${o},${res})'>${o}</span>`).join('');
-    }
-    function checkMathTirs(rep, correct) {
-      if (rep === correct) mathScore++;
-      else mathScore = Math.max(0, mathScore - 1);
-      if (mathScore && mathScore % 5 === 0) mathLevel++;
-      document.getElementById('mathTirsScore').textContent = mathScore;
-      document.getElementById('mathTirsNiveau').textContent = mathLevel;
-      loadMathTirs();
-    }
-
-    // MotAlien
-    let mots = [
-      { mot: 'ses', erreurs: ['ces', 'c'est', 'sait'] },
-      { mot: 'son', erreurs: ['sont', 'ce', 'se'] },
-      { mot: 'mais', erreurs: ['mes', 'met', 'mai'] },
-      { mot: 'et', erreurs: ['est', 'ai', 'es'] }
-    ];
-    let motScore = 0, motLevel = 1;
-    function loadMotAlien() {
-      let item = mots[Math.floor(Math.random() * Math.min(motLevel, mots.length))];
-      let choix = [item.mot, ...item.erreurs];
-      choix.sort(() => Math.random() - 0.5);
-      document.getElementById('motalienQ').textContent = `Choisis la bonne orthographe :`;
-      document.getElementById('motalienChoices').innerHTML = choix.map(c => `<span class='choice' onclick='checkMotAlien("${c}","${item.mot}")'>${c}</span>`).join('');
-    }
-    function checkMotAlien(rep, correct) {
-      if (rep === correct) motScore++;
-      else motScore = Math.max(0, motScore - 1);
-      if (motScore && motScore % 5 === 0 && motLevel < mots.length) motLevel++;
-      document.getElementById('motalienScore').textContent = motScore;
-      document.getElementById('motalienNiveau').textContent = motLevel;
-      loadMotAlien();
-    }
-
-    window.onload = () => {
-      nouvelleQuestion();
-      loadMathTirs();
-      loadMotAlien();
-    }
+    window.onload = chargerDonnees;
   </script>
 </body>
 </html>
